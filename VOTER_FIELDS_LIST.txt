@@ -1,0 +1,144 @@
+═══════════════════════════════════════════════════════════════
+    VOTER DATABASE - COMPLETE FIELDS LIST
+═══════════════════════════════════════════════════════════════
+
+📋 BASIC INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ name                  - Voter ka naam
+✓ phone                 - 10 digit mobile number
+✓ email                 - Email address (optional)
+✓ gender                - MALE, FEMALE, OTHER
+✓ age                   - Voter ki age
+✓ dateOfBirth           - Date of birth
+✓ voterIdNumber         - Voter ID card number
+✓ areaId                - Assigned area (Booth/Ward)
+
+🕉 CASTE & RELIGION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ caste                 - GENERAL, OBC, SC, ST, OTHER
+✓ subCaste              - Sub-caste name (e.g., Yadav, Chamar)
+✓ religion              - HINDU, MUSLIM, CHRISTIAN, SIKH, BUDDHIST, JAIN, OTHER
+
+💼 EMPLOYMENT & INCOME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ employmentType        - GOVERNMENT, PRIVATE, SELF_EMPLOYED, UNEMPLOYED,
+                          STUDENT, RETIRED, HOMEMAKER, DAILY_WAGE, FARMER
+✓ isGovernmentEmployee  - true/false (Sarkari naukri hai ya nahi)
+✓ governmentDepartment  - Department name (e.g., Education, Police)
+✓ monthlyIncome         - BELOW_10K, 10K_25K, 25K_50K, 50K_1L, ABOVE_1L, NOT_DISCLOSED
+
+🚶 MIGRATION STATUS (PRAWASHI)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ isMigrant             - true/false (Prawashi hai ya nahi)
+✓ migrantType           - SEASONAL, PERMANENT, TEMPORARY, NOT_APPLICABLE
+✓ originalState         - Original state (e.g., Bihar, UP)
+✓ originalDistrict      - Original district
+✓ migrationReason       - EMPLOYMENT, EDUCATION, MARRIAGE, BUSINESS, OTHER
+
+👨‍👩‍👧‍👦 FAMILY DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ familyMembers.total   - Total family members
+✓ familyMembers.voters  - Kitne voters hain family me
+✓ familyMembers.children- Kitne bachche hain
+✓ headOfFamily          - true/false (Ghar ka mukhiya hai ya nahi)
+
+🏠 PROPERTY & ASSETS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ hasOwnHouse           - true/false (Apna ghar hai ya nahi)
+✓ hasVehicle            - true/false (Vehicle hai ya nahi)
+✓ vehicleType           - TWO_WHEELER, FOUR_WHEELER, BOTH, NONE
+
+🎁 GOVERNMENT BENEFITS & SCHEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ hasRationCard         - true/false (Ration card hai ya nahi)
+✓ rationCardType        - APL, BPL, AAY, NONE
+✓ governmentSchemes[]   - Array of schemes
+  ├─ schemeName         - Scheme ka naam (e.g., PM Kisan)
+  ├─ beneficiaryId      - Beneficiary ID
+  └─ status             - ACTIVE, PENDING, REJECTED
+
+🎓 EDUCATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ education             - ILLITERATE, PRIMARY, SECONDARY, HIGHER_SECONDARY,
+                          GRADUATE, POST_GRADUATE, PROFESSIONAL
+
+👑 SOCIAL & POLITICAL INFLUENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ isInfluencer          - true/false (Influential person hai ya nahi)
+✓ influenceLevel        - NONE, LOCAL, AREA, DISTRICT
+✓ socialGroups[]        - Array of groups (e.g., Youth Club, Farmers Association)
+✓ politicalAffiliation  - Political party affiliation (optional)
+
+📊 ENGAGEMENT & SUPPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ consentStatus         - GIVEN, NOT_GIVEN, WITHDRAWN
+✓ consentDate           - Consent dene ki date
+✓ engagementLevel       - HIGH, MEDIUM, LOW, NONE
+✓ supportLevel          - STRONG_SUPPORTER, SUPPORTER, NEUTRAL, OPPONENT, UNKNOWN
+✓ interestTags[]        - Array of interests (e.g., Agriculture, Education)
+✓ issues[]              - Array of issues (e.g., Road repair, Water supply)
+✓ notes                 - Additional notes
+
+📞 INTERACTION HISTORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ interactions[]        - Array of interactions
+  ├─ date               - Interaction date
+  ├─ type               - CALL, VISIT, EVENT, CAMPAIGN, SURVEY
+  ├─ notes              - Interaction notes
+  └─ contactedBy        - User ID who contacted
+✓ lastInteractionDate   - Last contact date
+
+📍 ADDRESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ address.street        - Street address
+✓ address.landmark      - Landmark
+✓ address.pincode       - PIN code
+
+🔧 SYSTEM FIELDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ organizationId        - Organization ID (for multi-tenant)
+✓ addedBy               - User ID who added this voter
+✓ status                - ACTIVE, INACTIVE, MOVED, DECEASED
+✓ additionalData        - Extensible field for future data
+✓ createdAt             - Record creation date
+✓ updatedAt             - Last update date
+
+═══════════════════════════════════════════════════════════════
+    TOTAL FIELDS: 40+ (Extensible)
+═══════════════════════════════════════════════════════════════
+
+🎯 USE CASES:
+
+1. GOVERNMENT EMPLOYEES
+   Filter: isGovernmentEmployee=true
+   Use: Special outreach programs
+
+2. MIGRANTS (PRAWASHI)
+   Filter: isMigrant=true, migrantType=SEASONAL
+   Use: Contact before voting season
+
+3. BPL CARD HOLDERS
+   Filter: rationCardType=BPL
+   Use: Welfare scheme awareness
+
+4. CASTE-BASED OUTREACH
+   Filter: caste=OBC, supportLevel=NEUTRAL
+   Use: Community-specific campaigns
+
+5. INFLUENCERS
+   Filter: isInfluencer=true, influenceLevel=AREA
+   Use: Key person engagement
+
+6. EDUCATED YOUTH
+   Filter: age<35, education=GRADUATE
+   Use: Youth-focused programs
+
+7. FARMERS
+   Filter: employmentType=FARMER
+   Use: Agricultural policy campaigns
+
+8. PROPERTY OWNERS
+   Filter: hasOwnHouse=true, hasVehicle=true
+   Use: Economic status analysis
+
+═══════════════════════════════════════════════════════════════

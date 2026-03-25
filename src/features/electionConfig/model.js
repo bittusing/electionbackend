@@ -1,0 +1,71 @@
+const mongoose = require('mongoose');
+
+const electionConfigSchema = new mongoose.Schema({
+  constituencyName: {
+    type: String,
+    required: [true, 'Constituency name is required'],
+    trim: true
+  },
+  constituencyNumber: {
+    type: String,
+    trim: true
+  },
+  constituencyType: {
+    type: String,
+    enum: ['VIDHANSABHA', 'LOKSABHA', 'MUNICIPAL', 'PANCHAYAT', 'OTHER'],
+    default: 'VIDHANSABHA'
+  },
+  state: {
+    type: String,
+    required: [true, 'State is required'],
+    trim: true
+  },
+  district: {
+    type: String,
+    required: [true, 'District is required'],
+    trim: true
+  },
+  candidateName: {
+    type: String,
+    trim: true
+  },
+  partyName: {
+    type: String,
+    trim: true
+  },
+  partySymbol: {
+    type: String,
+    trim: true
+  },
+  electionDate: {
+    type: Date
+  },
+  totalRegisteredVoters: {
+    type: Number,
+    default: 0
+  },
+  totalBooths: {
+    type: Number,
+    default: 0
+  },
+  totalWards: {
+    type: Number,
+    default: 0
+  },
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: false
+  },
+  status: {
+    type: String,
+    enum: ['ACTIVE', 'COMPLETED', 'UPCOMING'],
+    default: 'ACTIVE'
+  }
+}, {
+  timestamps: true
+});
+
+electionConfigSchema.index({ organizationId: 1 });
+
+module.exports = mongoose.model('ElectionConfig', electionConfigSchema);
