@@ -1,20 +1,5 @@
-try {
-  require('dotenv').config();
-} catch (e) {
-  console.error('dotenv error:', e.message);
-}
-
-let app;
-try {
-  app = require('../src/app');
-} catch (e) {
-  console.error('App load error:', e.message, e.stack);
-  module.exports = (req, res) => {
-    res.status(500).json({ success: false, error: 'App failed to load: ' + e.message });
-  };
-  return;
-}
-
+require('dotenv').config();
+const app = require('../src/app');
 const connectDB = require('../src/config/database');
 const permissionService = require('../src/features/permission/service');
 
@@ -38,7 +23,7 @@ module.exports = async (req, res) => {
   try {
     await ensureInit();
   } catch (err) {
-    return res.status(500).json({ success: false, message: 'DB connection failed: ' + err.message });
+    return res.status(500).json({ success: false, message: 'Server init failed: ' + err.message });
   }
   app(req, res);
 };

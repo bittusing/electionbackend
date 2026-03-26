@@ -3,8 +3,9 @@ const { successResponse, errorResponse, paginatedResponse } = require('../../uti
 const multer = require('multer');
 const csv = require('csv-parser');
 const fs = require('fs');
+const os = require('os');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: os.tmpdir() });
 
 exports.uploadMiddleware = upload.single('file');
 
