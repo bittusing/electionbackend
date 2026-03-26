@@ -13,6 +13,11 @@ async function bootstrap() {
 }
 
 module.exports = async (req, res) => {
-  await bootstrap();
-  return app(req, res);
+  try {
+    await bootstrap();
+    return app(req, res);
+  } catch (err) {
+    console.error('Bootstrap error:', err);
+    res.status(500).json({ success: false, message: 'Server initialization failed' });
+  }
 };
