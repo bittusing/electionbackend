@@ -18,6 +18,7 @@ router.post('/',
 
 router.get('/', checkPermission('rallies', 'view'), controller.getRallies);
 router.get('/upcoming', checkPermission('rallies', 'view'), controller.getUpcomingRallies);
+router.get('/:id/audience', checkPermission('rallies', 'view'), controller.getRallyAudience);
 router.get('/:id', checkPermission('rallies', 'view'), controller.getRallyById);
 
 router.put('/:id',

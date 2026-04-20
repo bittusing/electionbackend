@@ -49,6 +49,49 @@ class AnalyticsService {
       { $group: { _id: '$engagementLevel', count: { $sum: 1 } } }
     ]);
 
+    const votersBySupport = await Voter.aggregate([
+      { $match: voterQuery },
+      { $group: { _id: '$supportLevel', count: { $sum: 1 } } }
+    ]);
+
+    const supportCounts = votersBySupport.reduce((acc, row) => {
+      const key = row._id || 'UNKNOWN';
+      acc[key] = row.count;
+      return acc;
+    }, {});
+
+    const strong = supportCounts.STRONG_SUPPORTER || 0;
+    const supporter = supportCounts.SUPPORTER || 0;
+    const neutral = supportCounts.NEUTRAL || 0;
+    const opponent = supportCounts.OPPONENT || 0;
+    const unknown = supportCounts.UNKNOWN || 0;
+
+    const decided = strong + supporter + neutral + opponent;
+    const supporterVotes = strong + supporter;
+
+    const supporterSnapshot = {
+      breakdown: votersBySupport,
+      strongSupporter: strong,
+      supporter,
+      neutral,
+      opponent,
+      unknown,
+      totalVoters,
+      /** Share of all voters marked strong + supporter */
+      supporterSharePercent:
+        totalVoters > 0 ? Number(((supporterVotes / totalVoters) * 100).toFixed(1)) : 0,
+      /** Share of voters excluding “unknown” — campaign lean among contacted / classified */
+      supporterShareAmongDecidedPercent:
+        decided > 0 ? Number(((supporterVotes / decided) * 100).toFixed(1)) : 0,
+      oppositionSharePercent:
+        totalVoters > 0 ? Number(((opponent / totalVoters) * 100).toFixed(1)) : 0,
+      neutralSharePercent:
+        totalVoters > 0 ? Number(((neutral / totalVoters) * 100).toFixed(1)) : 0,
+      unknownSharePercent:
+        totalVoters > 0 ? Number(((unknown / totalVoters) * 100).toFixed(1)) : 0,
+      decidedVoters: decided,
+    };
+
     return {
       totalUsers,
       totalAreas,
@@ -59,7 +102,8 @@ class AnalyticsService {
       activeWorkers,
       taskCompletionRate: totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(2) : 0,
       votersByConsent,
-      votersByEngagement
+      votersByEngagement,
+      supporterSnapshot,
     };
   }
 

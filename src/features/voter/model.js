@@ -243,5 +243,6 @@ voterSchema.index({ isInfluencer: 1 });
 voterSchema.index({ rationCardType: 1 });
 voterSchema.index({ employmentType: 1 });
 voterSchema.index({ education: 1 });
+voterSchema.index({ supportLevel: 1, areaId: 1 });
 
 module.exports = mongoose.model('Voter', voterSchema);

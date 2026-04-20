@@ -17,6 +17,14 @@ router.post('/',
 );
 
 router.get('/', checkPermission('areas', 'view'), controller.getAreas);
+
+router.patch(
+  '/:id/field-campaign',
+  checkPermission('voters', 'edit'),
+  validate(validation.patchFieldCampaignValidation),
+  controller.patchFieldCampaign
+);
+
 router.get('/:id', checkPermission('areas', 'view'), controller.getAreaById);
 router.get('/:id/hierarchy', checkPermission('areas', 'view'), controller.getAreaHierarchy);
 router.get('/:id/stats', checkPermission('areas', 'view'), controller.getAreaStats);

@@ -19,6 +19,11 @@ exports.createAreaValidation = Joi.object({
   })
 });
 
+exports.patchFieldCampaignValidation = Joi.object({
+  signageStatus: Joi.string().valid('NONE', 'PARTIAL', 'COMPLETE').required(),
+  signageNotes: Joi.string().allow('', null).max(500),
+});
+
 exports.updateAreaValidation = Joi.object({
   name: Joi.string().min(2).max(100),
   assignedManager: Joi.string().hex().length(24).allow(null),

@@ -37,7 +37,19 @@ class AreaService {
     return { areas, total };
   }
 
-  async getAreaById(areaId, organizationId) {
+  async assertAreaInScope(areaId, scopedAreaIds, organizationId) {
+    const query = { _id: areaId };
+    if (organizationId) query.organizationId = organizationId;
+    const exists = await Area.findOne(query).select('_id').lean();
+    if (!exists) throw new Error('Area not found');
+    if (!scopedAreaIds) return;
+    if (!scopedAreaIds.includes(areaId.toString())) {
+      throw new Error('Area not found');
+    }
+  }
+
+  async getAreaById(areaId, organizationId, scopedAreaIds) {
+    await this.assertAreaInScope(areaId, scopedAreaIds, organizationId);
     const query = { _id: areaId };
     if (organizationId) query.organizationId = organizationId;
 
@@ -52,7 +64,32 @@ class AreaService {
     return area;
   }
 
-  async updateArea(areaId, updateData, organizationId) {
+  async patchFieldCampaign(areaId, body, organizationId, scopedAreaIds, userId) {
+    await this.assertAreaInScope(areaId, scopedAreaIds, organizationId);
+    const query = { _id: areaId };
+    if (organizationId) query.organizationId = organizationId;
+
+    const area = await Area.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          fieldCampaign: {
+            signageStatus: body.signageStatus,
+            signageNotes: body.signageNotes || '',
+            updatedAt: new Date(),
+            updatedBy: userId,
+          },
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!area) throw new Error('Area not found');
+    return area;
+  }
+
+  async updateArea(areaId, updateData, organizationId, scopedAreaIds) {
+    await this.assertAreaInScope(areaId, scopedAreaIds, organizationId);
     const query = { _id: areaId };
     if (organizationId) query.organizationId = organizationId;
 
@@ -86,7 +123,8 @@ class AreaService {
     return area;
   }
 
-  async getAreaHierarchy(areaId, organizationId) {
+  async getAreaHierarchy(areaId, organizationId, scopedAreaIds) {
+    await this.assertAreaInScope(areaId, scopedAreaIds, organizationId);
     const query = { _id: areaId };
     if (organizationId) query.organizationId = organizationId;
 
@@ -105,7 +143,8 @@ class AreaService {
     };
   }
 
-  async getAreaStats(areaId, organizationId) {
+  async getAreaStats(areaId, organizationId, scopedAreaIds) {
+    await this.assertAreaInScope(areaId, scopedAreaIds, organizationId);
     const query = { _id: areaId };
     if (organizationId) query.organizationId = organizationId;
 

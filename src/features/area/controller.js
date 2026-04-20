@@ -26,7 +26,7 @@ exports.getAreas = async (req, res) => {
 
 exports.getAreaById = async (req, res) => {
   try {
-    const area = await areaService.getAreaById(req.params.id, req.organizationId);
+    const area = await areaService.getAreaById(req.params.id, req.organizationId, req.scopedAreaIds);
     successResponse(res, area, 'Area fetched successfully');
   } catch (error) {
     errorResponse(res, error.message, 404);
@@ -35,7 +35,7 @@ exports.getAreaById = async (req, res) => {
 
 exports.updateArea = async (req, res) => {
   try {
-    const area = await areaService.updateArea(req.params.id, req.body, req.organizationId);
+    const area = await areaService.updateArea(req.params.id, req.body, req.organizationId, req.scopedAreaIds);
     successResponse(res, area, 'Area updated successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -44,7 +44,7 @@ exports.updateArea = async (req, res) => {
 
 exports.deleteArea = async (req, res) => {
   try {
-    await areaService.deleteArea(req.params.id, req.organizationId);
+    await areaService.deleteArea(req.params.id, req.organizationId, req.scopedAreaIds);
     successResponse(res, null, 'Area deleted successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -53,7 +53,7 @@ exports.deleteArea = async (req, res) => {
 
 exports.getAreaHierarchy = async (req, res) => {
   try {
-    const hierarchy = await areaService.getAreaHierarchy(req.params.id, req.organizationId);
+    const hierarchy = await areaService.getAreaHierarchy(req.params.id, req.organizationId, req.scopedAreaIds);
     successResponse(res, hierarchy, 'Area hierarchy fetched successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -62,8 +62,23 @@ exports.getAreaHierarchy = async (req, res) => {
 
 exports.getAreaStats = async (req, res) => {
   try {
-    const stats = await areaService.getAreaStats(req.params.id, req.organizationId);
+    const stats = await areaService.getAreaStats(req.params.id, req.organizationId, req.scopedAreaIds);
     successResponse(res, stats, 'Area stats fetched successfully');
+  } catch (error) {
+    errorResponse(res, error.message, 400);
+  }
+};
+
+exports.patchFieldCampaign = async (req, res) => {
+  try {
+    const area = await areaService.patchFieldCampaign(
+      req.params.id,
+      req.body,
+      req.organizationId,
+      req.scopedAreaIds,
+      req.user.id
+    );
+    successResponse(res, area, 'Field campaign signage updated');
   } catch (error) {
     errorResponse(res, error.message, 400);
   }

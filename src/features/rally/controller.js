@@ -3,7 +3,7 @@ const { successResponse, errorResponse, paginatedResponse } = require('../../uti
 
 exports.createRally = async (req, res) => {
   try {
-    const rally = await rallyService.createRally(req.body, null, req.user.id);
+    const rally = await rallyService.createRally(req.body, null, req.user.id, req.scopedAreaIds);
     successResponse(res, rally, 'Rally created successfully', 201);
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -26,8 +26,21 @@ exports.getRallies = async (req, res) => {
 
 exports.getRallyById = async (req, res) => {
   try {
-    const rally = await rallyService.getRallyById(req.params.id, req.organizationId);
+    const rally = await rallyService.getRallyById(req.params.id, req.organizationId, req.scopedAreaIds);
     successResponse(res, rally, 'Rally fetched successfully');
+  } catch (error) {
+    errorResponse(res, error.message, 404);
+  }
+};
+
+exports.getRallyAudience = async (req, res) => {
+  try {
+    const audience = await rallyService.getRallyAudience(
+      req.params.id,
+      req.organizationId,
+      req.scopedAreaIds
+    );
+    successResponse(res, audience, 'Meeting audience summary');
   } catch (error) {
     errorResponse(res, error.message, 404);
   }
@@ -35,7 +48,7 @@ exports.getRallyById = async (req, res) => {
 
 exports.updateRally = async (req, res) => {
   try {
-    const rally = await rallyService.updateRally(req.params.id, req.body, req.organizationId);
+    const rally = await rallyService.updateRally(req.params.id, req.body, req.organizationId, req.scopedAreaIds);
     successResponse(res, rally, 'Rally updated successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -44,7 +57,7 @@ exports.updateRally = async (req, res) => {
 
 exports.deleteRally = async (req, res) => {
   try {
-    await rallyService.deleteRally(req.params.id, req.organizationId);
+    await rallyService.deleteRally(req.params.id, req.organizationId, req.scopedAreaIds);
     successResponse(res, null, 'Rally deleted successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -65,7 +78,12 @@ exports.updateRallyStatus = async (req, res) => {
   try {
     const { status, actualAttendees, feedback } = req.body;
     const rally = await rallyService.updateRallyStatus(
-      req.params.id, status, actualAttendees, feedback, req.organizationId
+      req.params.id,
+      status,
+      actualAttendees,
+      feedback,
+      req.organizationId,
+      req.scopedAreaIds
     );
     successResponse(res, rally, 'Rally status updated successfully');
   } catch (error) {

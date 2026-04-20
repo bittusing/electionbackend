@@ -83,7 +83,8 @@ const defaultPermissions = {
   VOLUNTEER: {
     dashboard: { view: true },
     areas: { view: true, create: false, edit: false, delete: false },
-    voters: { view: true, create: true, edit: false, delete: false, bulkImport: false, export: false },
+    /** Field volunteers: update phone / support / notes in assigned areas only (controller restricts fields). */
+    voters: { view: true, create: true, edit: true, delete: false, bulkImport: false, export: false },
     workers: { view: false, create: false, edit: false, delete: false, viewPerformance: false },
     tasks: { view: true, create: false, edit: false, delete: false, assign: false, viewAll: false },
     campaigns: { view: false, create: false, edit: false, delete: false, launch: false },

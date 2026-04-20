@@ -11,7 +11,7 @@ exports.uploadMiddleware = upload.single('file');
 
 exports.createVoter = async (req, res) => {
   try {
-    const voter = await voterService.createVoter(req.body, null, req.user.id);
+    const voter = await voterService.createVoter(req.body, null, req.user.id, req.scopedAreaIds);
     successResponse(res, voter, 'Voter created successfully', 201);
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -45,7 +45,7 @@ exports.getVoters = async (req, res) => {
 
 exports.getVoterById = async (req, res) => {
   try {
-    const voter = await voterService.getVoterById(req.params.id, null);
+    const voter = await voterService.getVoterById(req.params.id, null, req.scopedAreaIds);
     successResponse(res, voter, 'Voter fetched successfully');
   } catch (error) {
     errorResponse(res, error.message, 404);
@@ -54,7 +54,8 @@ exports.getVoterById = async (req, res) => {
 
 exports.updateVoter = async (req, res) => {
   try {
-    const voter = await voterService.updateVoter(req.params.id, req.body, null);
+    const body = voterService.filterUpdateForFieldTeam(req.user.role, req.body);
+    const voter = await voterService.updateVoter(req.params.id, body, null, req.scopedAreaIds);
     successResponse(res, voter, 'Voter updated successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -63,7 +64,7 @@ exports.updateVoter = async (req, res) => {
 
 exports.deleteVoter = async (req, res) => {
   try {
-    await voterService.deleteVoter(req.params.id, null);
+    await voterService.deleteVoter(req.params.id, null, req.scopedAreaIds);
     successResponse(res, null, 'Voter deleted successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -72,7 +73,13 @@ exports.deleteVoter = async (req, res) => {
 
 exports.addInteraction = async (req, res) => {
   try {
-    const voter = await voterService.addInteraction(req.params.id, req.body, req.user.id, null);
+    const voter = await voterService.addInteraction(
+      req.params.id,
+      req.body,
+      req.user.id,
+      null,
+      req.scopedAreaIds
+    );
     successResponse(res, voter, 'Interaction added successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);
@@ -132,7 +139,21 @@ exports.bulkImport = async (req, res) => {
             return errorResponse(res, 'No valid voters found in CSV', 400);
           }
 
-          const result = await voterService.bulkImport(voters, null, req.user.id);
+          let toImport = voters;
+          if (req.scopedAreaIds) {
+            toImport = voters.filter(
+              (v) => v.areaId && req.scopedAreaIds.includes(String(v.areaId))
+            );
+            if (toImport.length === 0) {
+              return errorResponse(
+                res,
+                'No rows match your assigned areas (areaId must be within your scope)',
+                400
+              );
+            }
+          }
+
+          const result = await voterService.bulkImport(toImport, null, req.user.id);
           successResponse(res, { ...result, errors }, 'Voters imported successfully');
         } catch (error) {
           errorResponse(res, error.message, 400);

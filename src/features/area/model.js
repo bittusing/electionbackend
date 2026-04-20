@@ -66,6 +66,17 @@ const areaSchema = new mongoose.Schema({
     latitude: Number,
     longitude: Number
   },
+  /** Village / ward / booth field ops: posters, signage, visibility (updated by booth workers & volunteers). */
+  fieldCampaign: {
+    signageStatus: {
+      type: String,
+      enum: ['NONE', 'PARTIAL', 'COMPLETE'],
+      default: 'NONE',
+    },
+    signageNotes: { type: String, trim: true, default: '' },
+    updatedAt: Date,
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  },
   status: {
     type: String,
     enum: ['ACTIVE', 'INACTIVE'],

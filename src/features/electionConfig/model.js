@@ -61,7 +61,14 @@ const electionConfigSchema = new mongoose.Schema({
     type: String,
     enum: ['ACTIVE', 'COMPLETED', 'UPCOMING'],
     default: 'ACTIVE'
-  }
+  },
+  /** Editable rows for dashboard “past election / benchmark” bar chart (e.g. last Vidhan Sabha vote %). */
+  pastElectionComparison: [{
+    label: { type: String, trim: true, required: true },
+    year: { type: String, trim: true, default: '' },
+    value: { type: Number, required: true, min: 0, max: 100 },
+    barColor: { type: String, trim: true, default: '' },
+  }],
 }, {
   timestamps: true
 });

@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Rate limiting
-app.use('/api/', limiter);
+// app.use('/api/', limiter);
 
 // Health check
 app.get('/health', (req, res) => {

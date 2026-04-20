@@ -1,7 +1,47 @@
 const Voter = require('./model');
 
+/** Roles that may only patch a safe subset of voter fields (field / booth volunteers). */
+const FIELD_TEAM_ROLES = new Set(['VOLUNTEER']);
+
 class VoterService {
-  async createVoter(voterData, organizationId, userId) {
+  /**
+   * @param {string[]|null} scopedAreaIds from resolveAreaScope; null = full access
+   */
+  async assertVoterInScope(voterId, scopedAreaIds, organizationId) {
+    const q = { _id: voterId };
+    if (organizationId) q.organizationId = organizationId;
+    const voter = await Voter.findOne(q).select('areaId').lean();
+    if (!voter) throw new Error('Voter not found');
+    if (!scopedAreaIds) return;
+    const aid = voter.areaId?.toString();
+    if (!aid || !scopedAreaIds.includes(aid)) {
+      throw new Error('Voter not found');
+    }
+  }
+
+  assertAreaIdInScopeForCreate(areaId, scopedAreaIds) {
+    if (!scopedAreaIds) return;
+    const id = areaId?.toString();
+    if (!id) throw new Error('areaId is required for your account when adding voters');
+    if (!scopedAreaIds.includes(id)) {
+      throw new Error('You can only add voters within your assigned areas');
+    }
+  }
+
+  filterUpdateForFieldTeam(role, updateData) {
+    if (!FIELD_TEAM_ROLES.has(role)) return updateData;
+    const allowed = [
+      'phone', 'email', 'supportLevel', 'engagementLevel', 'consentStatus', 'notes', 'address',
+    ];
+    const out = {};
+    allowed.forEach((k) => {
+      if (updateData[k] !== undefined) out[k] = updateData[k];
+    });
+    return out;
+  }
+
+  async createVoter(voterData, organizationId, userId, scopedAreaIds) {
+    this.assertAreaIdInScopeForCreate(voterData.areaId, scopedAreaIds);
     if (organizationId) {
       voterData.organizationId = organizationId;
     }
@@ -58,12 +98,13 @@ class VoterService {
     return { voters, total };
   }
 
-  async getVoterById(voterId, organizationId) {
+  async getVoterById(voterId, organizationId, scopedAreaIds) {
+    await this.assertVoterInScope(voterId, scopedAreaIds, organizationId);
     const query = { _id: voterId };
     if (organizationId) query.organizationId = organizationId;
 
     const voter = await Voter.findOne(query)
-      .populate('areaId', 'name type')
+      .populate('areaId', 'name type hierarchy')
       .populate('addedBy', 'name phone')
       .populate('interactions.contactedBy', 'name');
 
@@ -74,7 +115,8 @@ class VoterService {
     return voter;
   }
 
-  async updateVoter(voterId, updateData, organizationId) {
+  async updateVoter(voterId, updateData, organizationId, scopedAreaIds) {
+    await this.assertVoterInScope(voterId, scopedAreaIds, organizationId);
     const query = { _id: voterId };
     if (organizationId) query.organizationId = organizationId;
 
@@ -95,7 +137,8 @@ class VoterService {
     return voter;
   }
 
-  async deleteVoter(voterId, organizationId) {
+  async deleteVoter(voterId, organizationId, scopedAreaIds) {
+    await this.assertVoterInScope(voterId, scopedAreaIds, organizationId);
     const query = { _id: voterId };
     if (organizationId) query.organizationId = organizationId;
 
@@ -107,7 +150,8 @@ class VoterService {
     return voter;
   }
 
-  async addInteraction(voterId, interactionData, userId, organizationId) {
+  async addInteraction(voterId, interactionData, userId, organizationId, scopedAreaIds) {
+    await this.assertVoterInScope(voterId, scopedAreaIds, organizationId);
     const query = { _id: voterId };
     if (organizationId) query.organizationId = organizationId;
 
