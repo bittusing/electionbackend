@@ -28,6 +28,15 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+exports.getWorkScope = async (req, res) => {
+  try {
+    const payload = await authService.getWorkScopeForUser(req.user, req.scopedAreaIds);
+    successResponse(res, payload, 'Work area scope');
+  } catch (error) {
+    errorResponse(res, error.message, 400);
+  }
+};
+
 exports.updateProfile = async (req, res) => {
   try {
     const user = await authService.updateProfile(req.user.id, req.body);

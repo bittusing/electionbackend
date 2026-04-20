@@ -65,7 +65,11 @@ exports.getTaskCompletionStats = async (req, res) => {
 exports.getVoterDemographics = async (req, res) => {
   try {
     const { areaId } = req.query;
-    const demographics = await analyticsService.getVoterDemographics(areaId, req.organizationId);
+    const demographics = await analyticsService.getVoterDemographics(
+      areaId,
+      req.organizationId,
+      req.scopedAreaIds
+    );
     successResponse(res, demographics, 'Voter demographics fetched successfully');
   } catch (error) {
     errorResponse(res, error.message, 400);

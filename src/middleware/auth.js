@@ -19,7 +19,7 @@ exports.protect = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id)
       .select('-password')
-      .populate('assignedAreas', '_id name type hierarchy');
+      .populate('assignedAreas', '_id name type code hierarchy');
 
     if (!req.user) {
       return res.status(401).json({

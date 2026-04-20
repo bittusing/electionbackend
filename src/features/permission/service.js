@@ -87,13 +87,38 @@ const defaultPermissions = {
     voters: { view: true, create: true, edit: true, delete: false, bulkImport: false, export: false },
     workers: { view: false, create: false, edit: false, delete: false, viewPerformance: false },
     tasks: { view: true, create: false, edit: false, delete: false, assign: false, viewAll: false },
-    campaigns: { view: false, create: false, edit: false, delete: false, launch: false },
+    /** Read messaging stats / lists in assigned areas; sending stays edit-only for managers. */
+    campaigns: { view: true, create: false, edit: false, delete: false, launch: false },
     rallies: { view: true, create: false, edit: false, delete: false, schedule: false },
-    reports: { view: false, viewAll: false, export: false, viewDemographics: false },
+    reports: { view: true, viewAll: false, export: false, viewDemographics: true },
     users: { view: false, create: false, edit: false, delete: false, manageRoles: false },
     settings: { view: false, edit: false }
   }
 };
+
+/**
+ * If any write-style permission is on, the matching `view` must be true so users can
+ * list and predict data (fixes legacy DB rows with create/edit but view: false).
+ */
+function coercePermissionCoherence(permissions) {
+  if (!permissions || typeof permissions !== 'object') return permissions;
+  const p = JSON.parse(JSON.stringify(permissions));
+  const pairs = [
+    ['voters', ['create', 'edit', 'delete', 'bulkImport', 'export']],
+    ['rallies', ['create', 'edit', 'delete', 'schedule']],
+    ['tasks', ['create', 'edit', 'delete', 'assign']],
+    ['campaigns', ['create', 'edit', 'delete', 'launch']],
+    ['areas', ['create', 'edit', 'delete']],
+    ['workers', ['create', 'edit', 'delete', 'viewPerformance']],
+    ['users', ['create', 'edit', 'delete', 'manageRoles']],
+  ];
+  for (const [mod, keys] of pairs) {
+    if (!p[mod] || typeof p[mod] !== 'object') continue;
+    const anyWrite = keys.some((k) => p[mod][k] === true);
+    if (anyWrite) p[mod].view = true;
+  }
+  return p;
+}
 
 class PermissionService {
   async initializePermissions() {
@@ -116,8 +141,8 @@ class PermissionService {
         permissions: defaultPermissions[role] || defaultPermissions.VOLUNTEER
       });
     }
-    
-    return permission.permissions;
+
+    return coercePermissionCoherence(permission.permissions);
   }
 
   async updatePermissions(role, permissions) {

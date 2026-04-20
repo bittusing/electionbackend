@@ -232,10 +232,19 @@ class AnalyticsService {
     return { byStatus, byPriority, overdueTasks };
   }
 
-  async getVoterDemographics(areaId, organizationId) {
+  async getVoterDemographics(areaId, organizationId, scopedAreaIds) {
     const query = {};
     if (organizationId) query.organizationId = organizationId;
-    if (areaId) query.areaId = areaId;
+    if (scopedAreaIds != null) {
+      const scope = scopedAreaIds.map((id) => id.toString());
+      if (areaId && scope.includes(String(areaId))) {
+        query.areaId = areaId;
+      } else {
+        query.areaId = { $in: scopedAreaIds };
+      }
+    } else if (areaId) {
+      query.areaId = areaId;
+    }
 
     const [
       byCaste, byReligion, byEducation, byEmployment, byIncome, byRationCard,

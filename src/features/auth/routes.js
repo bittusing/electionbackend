@@ -12,6 +12,8 @@ router.post('/login', validate(validation.loginValidation), controller.login);
 router.use(protect);
 router.use(resolveAreaScope);
 
+router.get('/work-scope', controller.getWorkScope);
+
 router.post('/register', checkPermission('users', 'create'), validate(validation.registerValidation), controller.register);
 router.get('/users', checkPermission('users', 'view'), controller.getAllUsers);
 router.get('/profile', controller.getProfile);
