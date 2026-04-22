@@ -47,7 +47,22 @@ const voterSchema = new mongoose.Schema({
   dateOfBirth: Date,
   occupation: String,
   voterIdNumber: String,
-  
+  /** Panchayat / नामावली roll — क्रम संख्या */
+  rollSerialNumber: {
+    type: Number,
+    min: 0
+  },
+  /** मकान नं० */
+  houseNumber: {
+    type: String,
+    trim: true
+  },
+  /** पिता / पति / माता का नाम (relative on electoral roll) */
+  relativeName: {
+    type: String,
+    trim: true
+  },
+
   // Caste & Religion
   caste: {
     type: String,

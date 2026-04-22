@@ -31,7 +31,20 @@ class VoterService {
   filterUpdateForFieldTeam(role, updateData) {
     if (!FIELD_TEAM_ROLES.has(role)) return updateData;
     const allowed = [
-      'phone', 'email', 'supportLevel', 'engagementLevel', 'consentStatus', 'notes', 'address',
+      'phone',
+      'email',
+      'supportLevel',
+      'engagementLevel',
+      'consentStatus',
+      'notes',
+      'address',
+      'houseNumber',
+      'relativeName',
+      'rollSerialNumber',
+      'voterIdNumber',
+      'gender',
+      'age',
+      'name',
     ];
     const out = {};
     allowed.forEach((k) => {

@@ -2,7 +2,9 @@ const Joi = require('joi');
 
 exports.createAreaValidation = Joi.object({
   name: Joi.string().min(2).max(100).required(),
-  type: Joi.string().valid('STATE', 'DISTRICT', 'BLOCK', 'VILLAGE', 'WARD', 'BOOTH').required(),
+  type: Joi.string()
+    .valid('STATE', 'DISTRICT', 'TEHSIL', 'BLOCK', 'VILLAGE', 'WARD', 'BOOTH')
+    .required(),
   code: Joi.string().max(50),
   parentId: Joi.string().hex().length(24).allow(null),
   assignedManager: Joi.string().hex().length(24),

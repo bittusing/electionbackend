@@ -8,14 +8,22 @@ exports.createVoterValidation = Joi.object({
   address: Joi.object({
     street: Joi.string(),
     landmark: Joi.string(),
-    pincode: Joi.string()
+    pincode: Joi.string(),
+    state: Joi.string(),
+    district: Joi.string(),
+    block: Joi.string(),
+    gramPanchayat: Joi.string(),
+    ward: Joi.string(),
   }),
   gender: Joi.string().valid('MALE', 'FEMALE', 'OTHER'),
-  age: Joi.number().min(18).max(120),
+  age: Joi.number().min(0).max(120),
   dateOfBirth: Joi.date(),
   occupation: Joi.string(),
   voterIdNumber: Joi.string(),
-  
+  rollSerialNumber: Joi.number().integer().min(0),
+  houseNumber: Joi.string().max(50),
+  relativeName: Joi.string().max(200),
+
   // Caste & Religion
   caste: Joi.string().valid('GENERAL', 'OBC', 'SC', 'ST', 'OTHER'),
   subCaste: Joi.string(),
@@ -74,13 +82,22 @@ exports.updateVoterValidation = Joi.object({
   name: Joi.string().min(2).max(100),
   phone: Joi.string().pattern(/^[0-9]{10}$/),
   email: Joi.string().email(),
+  voterIdNumber: Joi.string(),
+  rollSerialNumber: Joi.number().integer().min(0),
+  houseNumber: Joi.string().max(50),
+  relativeName: Joi.string().max(200),
   address: Joi.object({
     street: Joi.string(),
     landmark: Joi.string(),
-    pincode: Joi.string()
+    pincode: Joi.string(),
+    state: Joi.string(),
+    district: Joi.string(),
+    block: Joi.string(),
+    gramPanchayat: Joi.string(),
+    ward: Joi.string(),
   }),
   gender: Joi.string().valid('MALE', 'FEMALE', 'OTHER'),
-  age: Joi.number().min(18).max(120),
+  age: Joi.number().min(0).max(120),
   dateOfBirth: Joi.date(),
   occupation: Joi.string(),
   

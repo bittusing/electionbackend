@@ -22,6 +22,12 @@ router.post('/bulk-import',
   controller.bulkImport
 );
 
+router.post('/bulk-import-pdf',
+  checkPermission('voters', 'bulkImport'),
+  controller.uploadPdfMiddleware,
+  controller.bulkImportPdf
+);
+
 router.get('/', checkPermission('voters', 'view'), controller.getVoters);
 router.get('/:id', checkPermission('voters', 'view'), controller.getVoterById);
 

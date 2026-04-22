@@ -37,6 +37,52 @@ const electionConfigSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  /** Optional Hindi / second line title on dashboard hero (e.g. मल्लावां-बिलग्राम). Falls back to constituencyName. */
+  constituencyNameHi: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  /** Full dashboard hero background — if set, covers gradient (still shows text overlay). Public https URL recommended. */
+  dashboardBannerImageUrl: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  /** Candidate cutout / portrait (https URL). */
+  candidatePhotoUrl: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  /** Party election symbol image (https URL). */
+  partySymbolImageUrl: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  /** Hero gradient start (hex). Empty = use app primary orange. */
+  bannerGradientFrom: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  /** Hero gradient end (hex). */
+  bannerGradientTo: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  dashboardSloganLine1: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  dashboardSloganLine2: {
+    type: String,
+    trim: true,
+    default: '',
+  },
   electionDate: {
     type: Date
   },
